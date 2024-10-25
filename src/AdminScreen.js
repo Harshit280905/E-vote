@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, FlatList } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AdminScreen = () => {
@@ -12,13 +12,12 @@ const AdminScreen = () => {
   const [partyDescription, setPartyDescription] = useState('');
   const [candidates, setCandidates] = useState([]);
 
-  // Load candidates from AsyncStorage when the component mounts
   useEffect(() => {
     const loadCandidates = async () => {
       try {
         const storedCandidates = await AsyncStorage.getItem('candidates');
         if (storedCandidates) {
-          setCandidates(JSON.parse(storedCandidates)); // Parse the JSON string into an array
+          setCandidates(JSON.parse(storedCandidates));
         }
       } catch (error) {
         console.log('Error loading candidates:', error);
@@ -27,7 +26,6 @@ const AdminScreen = () => {
     loadCandidates();
   }, []);
 
-  // Handle Admin Login
   const handleLogin = () => {
     if (username === 'admin' && password === '1234') {
       setIsLoggedIn(true);
@@ -37,7 +35,6 @@ const AdminScreen = () => {
     }
   };
 
-  // Save candidate data
   const handleSaveCandidate = async () => {
     if (candidateName && partyName && partyDescription) {
       const newCandidate = {
@@ -47,12 +44,11 @@ const AdminScreen = () => {
       };
 
       const updatedCandidates = [...candidates, newCandidate];
-      setCandidates(updatedCandidates); // Update state
+      setCandidates(updatedCandidates);
 
       try {
-        await AsyncStorage.setItem('candidates', JSON.stringify(updatedCandidates)); // Save to AsyncStorage
+        await AsyncStorage.setItem('candidates', JSON.stringify(updatedCandidates));
         Alert.alert('Success', 'Candidate saved successfully!');
-        // Clear the form fields after saving
         setCandidateName('');
         setPartyName('');
         setPartyDescription('');
@@ -64,13 +60,12 @@ const AdminScreen = () => {
     }
   };
 
-  // Handle candidate deletion
   const handleDeleteCandidate = async (index) => {
     const updatedCandidates = candidates.filter((_, i) => i !== index);
-    setCandidates(updatedCandidates); // Update state
+    setCandidates(updatedCandidates);
 
     try {
-      await AsyncStorage.setItem('candidates', JSON.stringify(updatedCandidates)); // Save updated list to AsyncStorage
+      await AsyncStorage.setItem('candidates', JSON.stringify(updatedCandidates));
       Alert.alert('Success', 'Candidate deleted successfully!');
     } catch (error) {
       console.log('Error deleting candidate:', error);
@@ -92,9 +87,11 @@ const AdminScreen = () => {
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={true} // Hide password input
+          secureTextEntry={true}
         />
-        <Button title="Login" onPress={handleLogin} />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -121,7 +118,9 @@ const AdminScreen = () => {
         value={partyDescription}
         onChangeText={setPartyDescription}
       />
-      <Button title="Save Candidate" onPress={handleSaveCandidate} />
+      <TouchableOpacity style={styles.button} onPress={handleSaveCandidate}>
+        <Text style={styles.buttonText}>Save Candidate</Text>
+      </TouchableOpacity>
 
       <Text style={styles.title}>Saved Candidates</Text>
       <FlatList
@@ -132,7 +131,9 @@ const AdminScreen = () => {
             <Text style={styles.candidateText}>Name: {item.name}</Text>
             <Text style={styles.candidateText}>Party: {item.party}</Text>
             <Text style={styles.candidateText}>Description: {item.description}</Text>
-            <Button title="Delete" onPress={() => handleDeleteCandidate(index)} />
+            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteCandidate(index)}>
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -145,10 +146,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
   },
   input: {
     height: 40,
@@ -157,15 +161,41 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
   candidateItem: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     marginBottom: 10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
   },
   candidateText: {
     fontSize: 16,
+    marginBottom: 5,
+  },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    padding: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });
 

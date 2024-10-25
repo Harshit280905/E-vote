@@ -62,6 +62,7 @@ const VoterScreen = () => {
       <Button 
         title={isOtpSent ? "Login" : "Send OTP"} 
         onPress={isOtpSent ? handleLogin : handleSendOtp} 
+        color="#2B6CB0" // Custom blue color for button
       />
     </View>
   );
