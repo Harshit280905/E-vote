@@ -1,6 +1,7 @@
 // src/SelectionScreen.js
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SelectionScreen = ({ navigation }) => {
   const handleRoleSelection = (role) => {
@@ -8,7 +9,10 @@ const SelectionScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#4c669f', '#3b5998', '#192f6a']}
+      style={styles.container}
+    >
       <TouchableOpacity 
         style={[styles.button, styles.adminButton]} 
         onPress={() => handleRoleSelection('AdminScreen')}
@@ -22,7 +26,7 @@ const SelectionScreen = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Voter</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -34,23 +38,28 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   button: {
-    width: 300,  // Width of the button
-    height: 60,  // Height of the button
-    justifyContent: 'center', // Center the text vertically
-    alignItems: 'center',     // Center the text horizontally
-    margin: 20,               // Space between buttons
-    borderRadius: 5,          // Rounded corners
+    width: 300,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   adminButton: {
-    backgroundColor: '#007bff', // Color for Admin button
+    backgroundColor: '#007bff',
   },
   voterButton: {
-    backgroundColor: '#28a745', // Color for Voter button
+    backgroundColor: '#28a745',
   },
   buttonText: {
-    color: '#ffffff',          // Text color
-    fontSize: 18,              // Font size
-    fontWeight: 'bold',        // Bold text
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
